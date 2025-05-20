@@ -7,9 +7,17 @@ const Cadastro = ({ onLogin, onVoltar }) => {
     const [email, setEmail] = useState('');
     const [senha, setSenha] = useState('');
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState(false);
 
     const handleSubmit = async (e) => {
         e.preventDefault();
+        
+        // Validação do nome
+        if (nome.trim().length < 3) {
+            setError('O nome deve ter pelo menos 3 caracteres');
+            return;
+        }
+
         try {
             const response = await axios.post('http://localhost:8080/api/auth/register', {
                 nome,
@@ -17,9 +25,17 @@ const Cadastro = ({ onLogin, onVoltar }) => {
                 senha
             });
             
-            const token = response.data;
-            localStorage.setItem('token', token);
-            onLogin(token);
+            setSuccess(true);
+            // Limpa os campos após o cadastro
+            setNome('');
+            setEmail('');
+            setSenha('');
+            
+            // Aguarda 2 segundos antes de voltar para o login
+            setTimeout(() => {
+                onVoltar();
+            }, 2000);
+            
         } catch (error) {
             setError(error.response?.data || 'Erro ao realizar cadastro');
         }
@@ -30,6 +46,7 @@ const Cadastro = ({ onLogin, onVoltar }) => {
             <form onSubmit={handleSubmit} className="login-form">
                 <h2>Cadastro</h2>
                 {error && <div className="error-message">{error}</div>}
+                {success && <div className="success-message">Cadastro realizado com sucesso! Redirecionando...</div>}
                 <div className="form-group">
                     <label htmlFor="nome">Nome:</label>
                     <input
@@ -38,6 +55,8 @@ const Cadastro = ({ onLogin, onVoltar }) => {
                         value={nome}
                         onChange={(e) => setNome(e.target.value)}
                         required
+                        minLength={3}
+                        placeholder="Digite seu nome completo"
                     />
                 </div>
                 <div className="form-group">
@@ -60,7 +79,7 @@ const Cadastro = ({ onLogin, onVoltar }) => {
                         required
                     />
                 </div>
-                <button type="submit">Cadastrar</button>
+                <button type="submit" disabled={success}>Cadastrar</button>
                 <button type="button" onClick={onVoltar} className="voltar-button">
                     Voltar para Login
                 </button>
