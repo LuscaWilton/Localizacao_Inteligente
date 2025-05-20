@@ -3,100 +3,127 @@
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background-color: #f5f5f5;
+    background: linear-gradient(135deg, #1a1a2e 60%, #16213e 100%);
 }
 
 .login-form {
-    background-color: white;
-    padding: 2rem;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: #16213e;
+    padding: 2.5rem 2rem;
+    border-radius: 18px;
+    box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.37);
     width: 100%;
-    max-width: 400px;
+    max-width: 380px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.2rem;
+    color: #fff;
 }
 
 .login-form h2 {
     text-align: center;
-    margin-bottom: 1.5rem;
-    color: #333;
+    margin-bottom: 0.5rem;
+    color: #e94560;
+    font-weight: 700;
+    letter-spacing: 1px;
 }
 
 .form-group {
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
 }
 
 .form-group label {
-    display: block;
-    margin-bottom: 0.5rem;
-    color: #666;
+    color: #e0e0e0;
+    font-size: 1rem;
+    font-weight: 500;
 }
 
 .form-group input {
     width: 100%;
-    padding: 0.75rem;
-    border: 1px solid #ddd;
-    border-radius: 4px;
+    padding: 0.7rem 1rem;
+    border: none;
+    border-radius: 8px;
     font-size: 1rem;
+    background: #23234b;
+    color: #fff;
+    transition: box-shadow 0.2s, border 0.2s;
+    box-shadow: 0 2px 8px rgba(25, 25, 50, 0.08);
 }
 
 .form-group input:focus {
     outline: none;
-    border-color: #4a90e2;
-    box-shadow: 0 0 0 2px rgba(74, 144, 226, 0.2);
+    border: 2px solid #e94560;
+    box-shadow: 0 0 0 2px #e9456033;
 }
 
 button {
     width: 100%;
-    padding: 0.75rem;
-    background-color: #4a90e2;
+    padding: 0.8rem;
+    background: linear-gradient(90deg, #e94560 60%, #903749 100%);
     color: white;
     border: none;
-    border-radius: 4px;
-    font-size: 1rem;
+    border-radius: 8px;
+    font-size: 1.1rem;
+    font-weight: 600;
     cursor: pointer;
-    transition: background-color 0.2s;
-    margin-bottom: 0.5rem;
+    transition: background 0.2s, transform 0.1s;
+    margin-bottom: 0.3rem;
+    letter-spacing: 0.5px;
+    box-shadow: 0 2px 8px rgba(233, 69, 96, 0.08);
 }
 
 button:hover {
-    background-color: #357abd;
+    background: linear-gradient(90deg, #903749 0%, #e94560 100%);
+    transform: translateY(-2px) scale(1.03);
 }
 
 button:disabled {
-    background-color: #cccccc;
+    background: #cccccc;
     cursor: not-allowed;
 }
 
 .error-message {
-    color: #dc3545;
+    color: #fff;
+    background: #e94560;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding: 0.5rem;
-    background-color: #f8d7da;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .success-message {
-    color: #28a745;
+    color: #fff;
+    background: #28a745;
     text-align: center;
-    margin-bottom: 1rem;
+    margin-bottom: 0.5rem;
     padding: 0.5rem;
-    background-color: #d4edda;
-    border-radius: 4px;
+    border-radius: 6px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 
 .cadastro-button {
-    background-color: #28a745;
+    background: linear-gradient(90deg, #21e6c1 60%, #278ea5 100%);
+    color: #16213e;
+    font-weight: 700;
 }
 
 .cadastro-button:hover {
-    background-color: #218838;
+    background: linear-gradient(90deg, #278ea5 0%, #21e6c1 100%);
+    color: #16213e;
 }
 
 .voltar-button {
-    background-color: #6c757d;
+    background: #23234b;
+    color: #fff;
+    font-weight: 500;
 }
 
 .voltar-button:hover {
-    background-color: #5a6268;
+    background: #39396a;
+    color: #fff;
 } 
