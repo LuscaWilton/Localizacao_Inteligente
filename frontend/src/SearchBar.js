@@ -1,13 +1,30 @@
-import React from 'react';
-import { FaSearch, FaGlobe } from 'react-icons/fa';
+import React, { useState } from 'react';
 import './style.css';
 
-function SearchBar() {
+function SearchBar({ onSearch }) {
+  const [searchTerm, setSearchTerm] = useState('');
+
+  const handleSubmit = (e) => {
+    e.preventDefault();
+    if (searchTerm.trim()) {
+      onSearch(searchTerm.trim());
+    }
+  };
+
   return (
-    <div className="search-bar">
-      <FaSearch className="search-icon" />
-      <input type="text" placeholder="Pesquise um país:" />
-      <FaGlobe className="globe-icon" />
+    <div className="search-container">
+      <form onSubmit={handleSubmit} className="search-form">
+        <input
+          type="text"
+          placeholder="Digite o nome do país..."
+          value={searchTerm}
+          onChange={(e) => setSearchTerm(e.target.value)}
+          className="search-input"
+        />
+        <button type="submit" className="search-button">
+          Buscar
+        </button>
+      </form>
     </div>
   );
 }

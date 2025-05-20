@@ -1,44 +1,67 @@
-import React from 'react';
-import SidebarLeft from './SidebarLeft';
-import SearchBar from './SearchBar';
+import React, { useState, useEffect } from 'react';
+import axios from 'axios';
 import './style.css';
 
-const popularCountries = [
-  {
-    name: 'Brasil',
-    img: 'https://images.unsplash.com/photo-1506744038136-46273834b3fb?auto=format&fit=crop&w=400&q=80',
-    desc: 'O país do futebol, praias e florestas tropicais.'
-  },
-  {
-    name: 'Estados Unidos',
-    img: 'https://images.unsplash.com/photo-1464983953574-0892a716854b?auto=format&fit=crop&w=400&q=80',
-    desc: 'Diversidade cultural e grandes cidades.'
-  },
-  {
-    name: 'França',
-    img: 'https://images.unsplash.com/photo-1502602898657-3e91760cbb34?auto=format&fit=crop&w=400&q=80',
-    desc: 'Romance, gastronomia e monumentos históricos.'
-  },
-  {
-    name: 'Japão',
-    img: 'https://images.unsplash.com/photo-1509228468518-180dd4864904?auto=format&fit=crop&w=400&q=80',
-    desc: 'Tecnologia, tradição e paisagens únicas.'
-  }
-];
-
 function App() {
+  const [paises, setPaises] = useState([]);
+  const [paisSelecionado, setPaisSelecionado] = useState(null);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+  const [preferencias, setPreferencias] = useState({
+    regiao: '',
+    clima: '',
+    lingua: ''
+  });
+
+  const buscarPaises = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      const response = await axios.post('http://localhost:8080/api/paises/buscar', preferencias);
+      setPaises(response.data);
+    } catch (err) {
+      setError('Erro ao buscar países. Tente novamente.');
+      console.error('Erro:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const atualizarBase = async () => {
+    try {
+      setLoading(true);
+      setError(null);
+      await axios.post('http://localhost:8080/api/paises/atualizar-base');
+      alert('Base de países atualizada com sucesso!');
+      buscarPaises();
+    } catch (err) {
+      setError('Erro ao atualizar base de países.');
+      console.error('Erro:', err);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handlePreferenciasChange = (e) => {
+    const { name, value } = e.target;
+    setPreferencias(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
   return (
     <div className="app-wrapper">
       <header className="header glass">
         <h1>Localização Inteligente</h1>
         <nav>
-          <a href="#">Início</a>
+          <a href="#" className="active">Início</a>
           <a href="#">Sobre</a>
           <a href="#">Contato</a>
         </nav>
       </header>
+
       <div className="content-area">
-        <SidebarLeft />
         <main className="main-content">
           <div className="banner">
             <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=900&q=80" alt="Banner" />
@@ -47,23 +70,115 @@ function App() {
               <p>Busque, filtre e explore países com tecnologia e praticidade.</p>
             </div>
           </div>
-          <SearchBar />
-          <section className="popular-section">
-            <h3>Países Populares</h3>
-            <div className="popular-cards">
-              {popularCountries.map((c, i) => (
-                <div className="country-card-modern" key={i}>
-                  <img src={c.img} alt={c.name} />
-                  <div className="country-info">
-                    <h4>{c.name}</h4>
-                    <p>{c.desc}</p>
-                  </div>
-                </div>
-              ))}
+
+          <div className="filtros-container glass">
+            <h3>Filtros de Busca</h3>
+            <div className="filtros-grid">
+              <div className="filtro-item">
+                <label>Região:</label>
+                <select name="regiao" value={preferencias.regiao} onChange={handlePreferenciasChange}>
+                  <option value="">Todas</option>
+                  <option value="americas">Américas</option>
+                  <option value="europe">Europa</option>
+                  <option value="asia">Ásia</option>
+                  <option value="africa">África</option>
+                  <option value="oceania">Oceania</option>
+                </select>
+              </div>
+              <div className="filtro-item">
+                <label>Clima:</label>
+                <select name="clima" value={preferencias.clima} onChange={handlePreferenciasChange}>
+                  <option value="">Todos</option>
+                  <option value="Tropical">Tropical</option>
+                  <option value="Temperado">Temperado</option>
+                  <option value="Continental">Continental</option>
+                  <option value="Variado">Variado</option>
+                </select>
+              </div>
+              <div className="filtro-item">
+                <label>Idioma:</label>
+                <input
+                  type="text"
+                  name="lingua"
+                  value={preferencias.lingua}
+                  onChange={handlePreferenciasChange}
+                  placeholder="Digite o idioma"
+                />
+              </div>
             </div>
-          </section>
+            <div className="botoes-container">
+              <button onClick={buscarPaises} className="botao-buscar">
+                Buscar Países
+              </button>
+              <button onClick={atualizarBase} className="botao-atualizar">
+                Atualizar Base
+              </button>
+            </div>
+          </div>
+
+          {loading && (
+            <div className="loading-spinner">
+              <div className="spinner"></div>
+              <p>Carregando informações...</p>
+            </div>
+          )}
+
+          {error && (
+            <div className="error-message">
+              <p>{error}</p>
+            </div>
+          )}
+
+          <div className="paises-grid">
+            {paises.map((pais) => (
+              <div 
+                key={pais.id} 
+                className="pais-card glass"
+                onClick={() => setPaisSelecionado(pais)}
+              >
+                <h3>{pais.nome}</h3>
+                <div className="pais-info">
+                  <p><strong>Região:</strong> {pais.regiao}</p>
+                  <p><strong>Clima:</strong> {pais.clima}</p>
+                  <p><strong>Idioma:</strong> {pais.lingua}</p>
+                  <p><strong>Moeda:</strong> {pais.moeda}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {paisSelecionado && (
+            <div className="pais-detalhes glass">
+              <h2>{paisSelecionado.nome}</h2>
+              <div className="detalhes-grid">
+                <div className="detalhe-item">
+                  <h3>Região</h3>
+                  <p>{paisSelecionado.regiao}</p>
+                </div>
+                <div className="detalhe-item">
+                  <h3>Clima</h3>
+                  <p>{paisSelecionado.clima}</p>
+                </div>
+                <div className="detalhe-item">
+                  <h3>Idioma</h3>
+                  <p>{paisSelecionado.lingua}</p>
+                </div>
+                <div className="detalhe-item">
+                  <h3>Moeda</h3>
+                  <p>{paisSelecionado.moeda}</p>
+                </div>
+              </div>
+              <button 
+                className="botao-fechar"
+                onClick={() => setPaisSelecionado(null)}
+              >
+                Fechar
+              </button>
+            </div>
+          )}
         </main>
       </div>
+
       <footer className="footer glass">
         © {new Date().getFullYear()} Localização Inteligente. Todos os direitos reservados.
       </footer>
