@@ -323,4 +323,19 @@ body {
 .text-neon-purple { color: #a259ff; }
 .bg-neon-blue { background: #00fff7; }
 .shadow-neon { box-shadow: 0 0 16px #00fff7, 0 0 32px #a259ff; }
-.drop-shadow-neon { filter: drop-shadow(0 0 8px #00fff7); } 
+.drop-shadow-neon { filter: drop-shadow(0 0 8px #00fff7); }
+
+.logout-button {
+    background-color: #dc3545;
+    color: white;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+}
+
+.logout-button:hover {
+    background-color: #c82333;
+} 

@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Login from './components/Login';
+import Cadastro from './components/Cadastro';
 import './style.css';
 
 function App() {
@@ -7,11 +9,40 @@ function App() {
   const [paisSelecionado, setPaisSelecionado] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showCadastro, setShowCadastro] = useState(false);
   const [preferencias, setPreferencias] = useState({
     regiao: '',
     clima: '',
     lingua: ''
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    if (token) {
+      setIsAuthenticated(true);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    }
+  }, []);
+
+  const handleLogin = (token) => {
+    setIsAuthenticated(true);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    localStorage.removeItem('token');
+    delete axios.defaults.headers.common['Authorization'];
+  };
+
+  const handleShowCadastro = () => {
+    setShowCadastro(true);
+  };
+
+  const handleVoltarLogin = () => {
+    setShowCadastro(false);
+  };
 
   const buscarPaises = async () => {
     try {
@@ -50,6 +81,14 @@ function App() {
     }));
   };
 
+  if (!isAuthenticated) {
+    return showCadastro ? (
+      <Cadastro onLogin={handleLogin} onVoltar={handleVoltarLogin} />
+    ) : (
+      <Login onLogin={handleLogin} onCadastro={handleShowCadastro} />
+    );
+  }
+
   return (
     <div className="app-wrapper">
       <header className="header glass">
@@ -58,6 +97,7 @@ function App() {
           <a href="#" className="active">Início</a>
           <a href="#">Sobre</a>
           <a href="#">Contato</a>
+          <button onClick={handleLogout} className="logout-button">Sair</button>
         </nav>
       </header>
 
