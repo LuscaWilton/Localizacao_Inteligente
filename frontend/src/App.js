@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
+import Login from './components/Login';
+import Cadastro from './components/Cadastro';
 import './style.css';
 
 function App() {
@@ -7,11 +9,60 @@ function App() {
   const [paisSelecionado, setPaisSelecionado] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [showCadastro, setShowCadastro] = useState(false);
+  const [nomeUsuario, setNomeUsuario] = useState('');
   const [preferencias, setPreferencias] = useState({
     regiao: '',
     clima: '',
     lingua: ''
   });
+
+  useEffect(() => {
+    const token = localStorage.getItem('token');
+    const nome = localStorage.getItem('nomeUsuario');
+    if (token) {
+      setIsAuthenticated(true);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+      if (nome) setNomeUsuario(nome);
+      else fetchNomeUsuario(token);
+    }
+  }, []);
+
+  const fetchNomeUsuario = async (token) => {
+    try {
+      // Supondo que exista um endpoint para buscar dados do usuário logado
+      const response = await axios.get('http://localhost:8080/api/auth/me', {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setNomeUsuario(response.data.nome);
+      localStorage.setItem('nomeUsuario', response.data.nome);
+    } catch (err) {
+      setNomeUsuario('Usuário');
+    }
+  };
+
+  const handleLogin = (token) => {
+    setIsAuthenticated(true);
+    axios.defaults.headers.common['Authorization'] = `Bearer ${token}`;
+    fetchNomeUsuario(token);
+  };
+
+  const handleLogout = () => {
+    setIsAuthenticated(false);
+    setNomeUsuario('');
+    localStorage.removeItem('token');
+    localStorage.removeItem('nomeUsuario');
+    delete axios.defaults.headers.common['Authorization'];
+  };
+
+  const handleShowCadastro = () => {
+    setShowCadastro(true);
+  };
+
+  const handleVoltarLogin = () => {
+    setShowCadastro(false);
+  };
 
   const buscarPaises = async () => {
     try {
@@ -50,27 +101,25 @@ function App() {
     }));
   };
 
+  if (!isAuthenticated) {
+    return showCadastro ? (
+      <Cadastro onLogin={handleLogin} onVoltar={handleVoltarLogin} />
+    ) : (
+      <Login onLogin={handleLogin} onCadastro={handleShowCadastro} />
+    );
+  }
+
   return (
     <div className="app-wrapper">
       <header className="header glass">
-        <h1>Localização Inteligente</h1>
         <nav>
           <a href="#" className="active">Início</a>
-          <a href="#">Sobre</a>
-          <a href="#">Contato</a>
+          <button onClick={handleLogout} className="logout-button">Sair</button>
         </nav>
       </header>
 
       <div className="content-area">
         <main className="main-content">
-          <div className="banner">
-            <img src="https://images.unsplash.com/photo-1465101046530-73398c7f28ca?auto=format&fit=crop&w=900&q=80" alt="Banner" />
-            <div className="banner-text">
-              <h2>Descubra o mundo de forma inteligente</h2>
-              <p>Busque, filtre e explore países com tecnologia e praticidade.</p>
-            </div>
-          </div>
-
           <div className="filtros-container glass">
             <h3>Filtros de Busca</h3>
             <div className="filtros-grid">

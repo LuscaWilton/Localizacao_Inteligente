@@ -26,15 +26,17 @@ body {
 
 /* Header */
 .header {
-  padding: 1rem 2rem;
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
-  background: rgba(255, 255, 255, 0.1);
+  padding: 1.2rem 2rem 1.2rem 2rem;
+  background: #1a1a2e;
   backdrop-filter: blur(10px);
   position: sticky;
   top: 0;
   z-index: 1000;
+  border-radius: 0 0 18px 18px;
+  box-shadow: 0 4px 16px rgba(26, 26, 46, 0.15);
 }
 
 .header h1 {
@@ -42,16 +44,24 @@ body {
   color: #fff;
 }
 
-.header nav a {
-  color: #fff;
-  text-decoration: none;
-  margin-left: 2rem;
-  transition: color 0.3s ease;
+.header nav {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  margin-left: auto;
 }
 
-.header nav a:hover,
-.header nav a.active {
-  color: #4a90e2;
+.header nav a {
+  color: #e0e0e0;
+  text-decoration: none;
+  font-size: 1.1rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.header nav a.active,
+.header nav a:hover {
+  color: #21e6c1;
 }
 
 /* Content Area */
@@ -323,4 +333,49 @@ body {
 .text-neon-purple { color: #a259ff; }
 .bg-neon-blue { background: #00fff7; }
 .shadow-neon { box-shadow: 0 0 16px #00fff7, 0 0 32px #a259ff; }
-.drop-shadow-neon { filter: drop-shadow(0 0 8px #00fff7); } 
+.drop-shadow-neon { filter: drop-shadow(0 0 8px #00fff7); }
+
+.logout-button {
+  background: #e94560;
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.7rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin-left: 1.5rem;
+  cursor: pointer;
+  transition: background 0.2s, transform 0.1s;
+}
+
+.logout-button:hover {
+  background: #903749;
+  transform: scale(1.04);
+}
+
+.perfil-nome-container {
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  padding: 0.5rem 1.5rem 0.5rem 0.5rem;
+}
+
+.perfil-nome {
+  font-size: 1.3rem;
+  font-weight: 700;
+  color: #21e6c1;
+  background: linear-gradient(90deg, #16213e 60%, #1a1a2e 100%);
+  padding: 0.5rem 1.2rem;
+  border-radius: 18px 0 18px 0;
+  box-shadow: 0 2px 8px rgba(33, 230, 193, 0.08);
+  letter-spacing: 1px;
+  margin-right: 1.5rem;
+  border: 2px solid #21e6c1;
+  transition: background 0.3s, color 0.3s;
+}
+
+.perfil-nome:hover {
+  background: linear-gradient(90deg, #21e6c1 60%, #278ea5 100%);
+  color: #16213e;
+  border-color: #278ea5;
+} 
