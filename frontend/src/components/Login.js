@@ -10,10 +10,18 @@ const Login = ({ onLogin, onCadastro }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL || 'https://localizacao-inteligente-5.onrender.com'}/api/auth/login`, { email, senha });
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL || 'https://localizacao-inteligente-5.onrender.com'}/api/auth/login`,
+                { email, senha },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
             
-            if (response.data && response.data.token) {
-                const token = response.data.token;
+            if (response.data) {
+                const token = response.data;
                 localStorage.setItem('token', token);
                 onLogin(token);
             } else {
@@ -21,7 +29,11 @@ const Login = ({ onLogin, onCadastro }) => {
             }
         } catch (error) {
             console.error('Erro no login:', error);
-            setError('Email ou senha inválidos');
+            if (error.response && error.response.data) {
+                setError(error.response.data);
+            } else {
+                setError('Erro ao fazer login. Tente novamente.');
+            }
         }
     };
 
