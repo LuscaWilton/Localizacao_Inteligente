@@ -10,10 +10,7 @@ const Login = ({ onLogin, onCadastro }) => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/login', {
-                email,
-                senha
-            });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/login`, { email, senha });
             
             const token = response.data;
             localStorage.setItem('token', token);

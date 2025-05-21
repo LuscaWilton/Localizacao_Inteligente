@@ -19,11 +19,7 @@ const Cadastro = ({ onLogin, onVoltar }) => {
         }
 
         try {
-            const response = await axios.post('http://localhost:8080/api/auth/register', {
-                nome,
-                email,
-                senha
-            });
+            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, { nome, email, senha });
             
             setSuccess(true);
             // Limpa os campos após o cadastro
