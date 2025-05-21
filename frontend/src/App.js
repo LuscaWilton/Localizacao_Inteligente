@@ -4,7 +4,7 @@ import Login from './components/Login';
 import Cadastro from './components/Cadastro';
 import './style.css';
 
-// Sempre priorize a variável de ambiente, mas garanta o valor de produção como fallback
+
 const API_URL = process.env.REACT_APP_API_URL || 'https://localizacao-inteligente-5.onrender.com';
 
 function App() {
