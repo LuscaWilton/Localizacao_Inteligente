@@ -4,6 +4,9 @@ import Login from './components/Login';
 import Cadastro from './components/Cadastro';
 import './style.css';
 
+// Sempre priorize a variável de ambiente, mas garanta o valor de produção como fallback
+const API_URL = process.env.REACT_APP_API_URL || 'https://localizacao-inteligente-5.onrender.com';
+
 function App() {
   const [paises, setPaises] = useState([]);
   const [paisSelecionado, setPaisSelecionado] = useState(null);
@@ -32,8 +35,7 @@ function App() {
 
   const fetchNomeUsuario = async (token) => {
     try {
-      // Supondo que exista um endpoint para buscar dados do usuário logado
-      const response = await axios.get('http://localhost:8080/api/auth/me', {
+      const response = await axios.get(`${API_URL}/api/auth/me`, {
         headers: { Authorization: `Bearer ${token}` }
       });
       setNomeUsuario(response.data.nome);
@@ -69,7 +71,7 @@ function App() {
     try {
       setLoading(true);
       setError(null);
-      const response = await axios.post('http://localhost:8080/api/paises/buscar', preferencias);
+      const response = await axios.post(`${API_URL}/api/paises/buscar`, preferencias);
       setPaises(response.data);
     } catch (err) {
       setError('Erro ao buscar países. Tente novamente.');
@@ -83,7 +85,7 @@ function App() {
     try {
       setLoading(true);
       setError(null);
-      await axios.post('http://localhost:8080/api/paises/atualizar-base');
+      await axios.post(`${API_URL}/api/paises/atualizar-base`);
       alert('Base de países atualizada com sucesso!');
       buscarPaises();
     } catch (err) {
@@ -246,4 +248,4 @@ function App() {
   );
 }
 
-export default App; 
+export default App;
