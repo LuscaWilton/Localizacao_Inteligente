@@ -15,7 +15,8 @@ function App() {
   const [preferencias, setPreferencias] = useState({
     regiao: '',
     clima: '',
-    lingua: ''
+    lingua: '',
+    moeda: ''
   });
 
   useEffect(() => {
@@ -152,6 +153,16 @@ function App() {
                   value={preferencias.lingua}
                   onChange={handlePreferenciasChange}
                   placeholder="Digite o idioma"
+                />
+              </div>
+              <div className="filtro-item">
+                <label>Moeda:</label>
+                <input
+                  type="text"
+                  name="moeda"
+                  value={preferencias.moeda}
+                  onChange={handlePreferenciasChange}
+                  placeholder="Digite a moeda"
                 />
               </div>
             </div>
