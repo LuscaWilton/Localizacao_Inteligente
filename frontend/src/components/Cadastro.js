@@ -19,20 +19,32 @@ const Cadastro = ({ onLogin, onVoltar }) => {
         }
 
         try {
-            const response = await axios.post(`${process.env.REACT_APP_API_URL}/api/auth/register`, { nome, email, senha });
+            const response = await axios.post(
+                `${process.env.REACT_APP_API_URL || 'https://localizacao-inteligente-5.onrender.com'}/api/auth/register`,
+                { nome, email, senha },
+                {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }
+            );
             
-            setSuccess(true);
-            // Limpa os campos após o cadastro
-            setNome('');
-            setEmail('');
-            setSenha('');
-            
-            // Aguarda 2 segundos antes de voltar para o login
-            setTimeout(() => {
-                onVoltar();
-            }, 2000);
-            
+            if (response.data) {
+                setSuccess(true);
+                // Limpa os campos após o cadastro
+                setNome('');
+                setEmail('');
+                setSenha('');
+                
+                // Aguarda 2 segundos antes de voltar para o login
+                setTimeout(() => {
+                    onVoltar();
+                }, 2000);
+            } else {
+                setError('Erro ao realizar cadastro');
+            }
         } catch (error) {
+            console.error('Erro no cadastro:', error);
             setError(error.response?.data || 'Erro ao realizar cadastro');
         }
     };
