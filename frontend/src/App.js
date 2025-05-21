@@ -69,13 +69,32 @@ function App() {
 
   const buscarPaises = async () => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Sessão expirada. Faça login novamente.');
+        handleLogout();
+        return;
+      }
+
       setLoading(true);
       setError(null);
-      const response = await axios.post(`${API_URL}/api/paises/buscar`, preferencias);
+      
+      const response = await axios.post(`${API_URL}/api/paises/buscar`, preferencias, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
       setPaises(response.data);
     } catch (err) {
-      setError('Erro ao buscar países. Tente novamente.');
-      console.error('Erro:', err);
+      console.error('Erro detalhado:', err);
+      if (err.response?.status === 403) {
+        setError('Sessão expirada. Faça login novamente.');
+        handleLogout();
+      } else {
+        setError('Erro ao buscar países. Tente novamente.');
+      }
     } finally {
       setLoading(false);
     }
@@ -83,14 +102,33 @@ function App() {
 
   const atualizarBase = async () => {
     try {
+      const token = localStorage.getItem('token');
+      if (!token) {
+        setError('Sessão expirada. Faça login novamente.');
+        handleLogout();
+        return;
+      }
+
       setLoading(true);
       setError(null);
-      await axios.post(`${API_URL}/api/paises/atualizar-base`);
+      
+      await axios.post(`${API_URL}/api/paises/atualizar-base`, null, {
+        headers: {
+          'Authorization': `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
+      });
+      
       alert('Base de países atualizada com sucesso!');
       buscarPaises();
     } catch (err) {
-      setError('Erro ao atualizar base de países.');
-      console.error('Erro:', err);
+      console.error('Erro detalhado:', err);
+      if (err.response?.status === 403) {
+        setError('Sessão expirada. Faça login novamente.');
+        handleLogout();
+      } else {
+        setError('Erro ao atualizar base de países.');
+      }
     } finally {
       setLoading(false);
     }
