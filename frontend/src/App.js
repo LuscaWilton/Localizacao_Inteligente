@@ -69,32 +69,26 @@ function App() {
 
   const buscarPaises = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const token = localStorage.getItem('token');
       if (!token) {
-        setError('Sessão expirada. Faça login novamente.');
+        setError('Sessão expirada. Por favor, faça login novamente.');
         handleLogout();
         return;
       }
-
-      setLoading(true);
-      setError(null);
-      
       const response = await axios.post(`${API_URL}/api/paises/buscar`, preferencias, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+        headers: { Authorization: `Bearer ${token}` }
       });
-      
       setPaises(response.data);
     } catch (err) {
-      console.error('Erro detalhado:', err);
-      if (err.response?.status === 403) {
-        setError('Sessão expirada. Faça login novamente.');
+      if (err.response && err.response.status === 403) {
+        setError('Sessão expirada. Por favor, faça login novamente.');
         handleLogout();
       } else {
         setError('Erro ao buscar países. Tente novamente.');
       }
+      console.error('Erro:', err);
     } finally {
       setLoading(false);
     }
@@ -102,33 +96,27 @@ function App() {
 
   const atualizarBase = async () => {
     try {
+      setLoading(true);
+      setError(null);
       const token = localStorage.getItem('token');
       if (!token) {
-        setError('Sessão expirada. Faça login novamente.');
+        setError('Sessão expirada. Por favor, faça login novamente.');
         handleLogout();
         return;
       }
-
-      setLoading(true);
-      setError(null);
-      
-      await axios.post(`${API_URL}/api/paises/atualizar-base`, null, {
-        headers: {
-          'Authorization': `Bearer ${token}`,
-          'Content-Type': 'application/json'
-        }
+      await axios.post(`${API_URL}/api/paises/atualizar-base`, {}, {
+        headers: { Authorization: `Bearer ${token}` }
       });
-      
       alert('Base de países atualizada com sucesso!');
       buscarPaises();
     } catch (err) {
-      console.error('Erro detalhado:', err);
-      if (err.response?.status === 403) {
-        setError('Sessão expirada. Faça login novamente.');
+      if (err.response && err.response.status === 403) {
+        setError('Sessão expirada. Por favor, faça login novamente.');
         handleLogout();
       } else {
         setError('Erro ao atualizar base de países.');
       }
+      console.error('Erro:', err);
     } finally {
       setLoading(false);
     }
